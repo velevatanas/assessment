@@ -34,8 +34,6 @@ API.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        // const state = store.getState();
-        // const refresh = state.auth.tokens?.refresh;
         const storedTokens = JSON.parse(localStorage.getItem("tokens"));
         const refresh = storedTokens?.refresh;
 

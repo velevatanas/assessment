@@ -20,6 +20,11 @@
     width: 100%;
     border-collapse: collapse;
   }
+
+  .products-table td {
+    min-height: 40px;
+    height: 40px;
+  }
   
   .products-table th, .products-table td {
     border: 1px solid #ddd;
@@ -57,14 +62,6 @@
     background-color: #ccc;
     cursor: not-allowed;
   }
-
-
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
   
   .logout-button {
     background-color: #e3342f;
@@ -79,4 +76,20 @@
     background-color: #cc1f1a;
   }
   
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+  }
   
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .user-email {
+    font-weight: bold;
+    color: #333;
+  }

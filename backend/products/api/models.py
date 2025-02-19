@@ -2,9 +2,9 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 class CustomUser(AbstractUser):  
-    email = models.EmailField(unique=True)  # Enforce email as unique and required
+    email = models.EmailField(unique=True)  # enforce email as unique and required
 
-    REQUIRED_FIELDS = ['email']  # Make email required for superusers
+    REQUIRED_FIELDS = ['email']  # make email required for superusers
 
 class Product(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -21,4 +21,4 @@ class UserProduct(models.Model):
     selected_at = models.DateTimeField(auto_now_add=True) 
 
     class Meta:
-        unique_together = ('custom_user', 'product')  # Prevent duplicate selections
+        unique_together = ('custom_user', 'product')
