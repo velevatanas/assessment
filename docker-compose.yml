@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+      - "5173:5173"
+    volumes:
+      - ./backend:/app/backend
+      - ./frontend:/app/frontend
+      - node_modules:/app/frontend/node_modules
+volumes:
+  node_modules:
+
