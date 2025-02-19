@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.db.models import Q
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
@@ -19,7 +20,7 @@ class ProductSearchView(generics.ListAPIView):
     def get_queryset(self):
         search_query = self.request.query_params.get('search', None)
         if search_query:
-            return Product.objects.filter(name__icontains=search_query)
+            return Product.objects.filter(Q(name__icontains=search_query) | Q(description__icontains=search_query))
         return Product.objects.none()
 
 class ProductSelectView(APIView):
