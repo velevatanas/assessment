@@ -2,8 +2,12 @@ import axios from "axios";
 import store from "./store";
 import { logout, refreshTokenAction } from "./store/authSlice"; // Import actions
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+console.log('This is the picked up base url from local file or from env in Divio -' + BASE_URL)
+
 const API = axios.create({
-  baseURL: "http://localhost:8000/api",
+  baseURL: BASE_URL,
 });
 
 API.interceptors.request.use(
@@ -42,7 +46,7 @@ API.interceptors.response.use(
           return Promise.reject(error);
         }
 
-        const { data } = await axios.post("http://localhost:8000/api/token/refresh/", {
+        const { data } = await axios.post(`${BASE_URL}/token/refresh/`, {
           refresh,
         });
 
