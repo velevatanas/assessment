@@ -1,16 +1,9 @@
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure--840o1f($rt%^x-)nthj7x_^39*#*dnfgua2pn6p060z$p(p3q'
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = [
@@ -18,14 +11,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "trial-project-atanas-stage.eu.aldryn.io",  # Add your Divio domain
 ]
-# CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1",
-    "https://trial-project-atanas-stage.eu.aldryn.io",
-]
-
-# Application definition
+CORS_ALLOW_ALL_ORIGINS = True
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -82,19 +68,12 @@ TEMPLATES = [
 WSGI_APPLICATION = 'products.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
-
-# Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -119,9 +98,6 @@ CORS_ALLOW_CREDENTIALS = True
 
 AUTH_USER_MODEL = 'api.CustomUser'
 
-# Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -130,13 +106,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
 STATIC_URL = 'static/'
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

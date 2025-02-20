@@ -42,24 +42,32 @@ FROM base AS final
 
 WORKDIR /app
 
+# Install Node.js in final stage (needed if not inherited)
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt-get install -y nodejs
 
-RUN pip install supervisor
+# Install Nginx
+RUN apt-get update && apt-get install -y nginx
 
-# Create the logs directory before copying files
+# Create logs directory (if needed)
 RUN mkdir -p /app/logs
 
-COPY --from=backend /app/backend /app/backend
-COPY --from=frontend /app/frontend /app/frontend
+# Install Supervisor in final stage (if still using it for process management)
+RUN pip install supervisor
 
+# Copy backend from the backend stage and frontend from the frontend stage
+COPY --from=backend /app/backend /app/backend
+COPY --from=frontend /app/frontend/dist /app/frontend/dist
+
+
+# Reinstall Python dependencies in final stage
 RUN pip install --no-cache-dir -r /app/backend/products/requirements.txt
 
-# Expose ports
-EXPOSE 8000 5173
+COPY nginx.conf /etc/nginx/nginx.conf
 
+# Expose Nginx port (80) and (if needed) backend port (8000)
+EXPOSE 80 8000
+
+# If you're using Supervisor to start both Nginx and Django:
 COPY supervisor.conf /app/supervisor.conf
-
 WORKDIR /app/backend
-
-# Start Django & React via Supervisor
-CMD ["supervisord", "-c", "/app/supervisor.conf"]
+CMD service nginx start && supervisord -c /app/supervisor.conf
