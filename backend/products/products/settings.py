@@ -13,10 +13,16 @@ SECRET_KEY = 'django-insecure--840o1f($rt%^x-)nthj7x_^39*#*dnfgua2pn6p060z$p(p3q
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "trial-project-atanas-stage.eu.aldryn.io",  # Add your Divio domain
+]
 # CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
+    "http://127.0.0.1",
+    "https://trial-project-atanas-stage.eu.aldryn.io",
 ]
 
 # Application definition
@@ -104,6 +110,12 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://trial-project-atanas-stage.eu.aldryn.io",
+]
+
+CORS_ALLOW_CREDENTIALS = True
 
 AUTH_USER_MODEL = 'api.CustomUser'
 
