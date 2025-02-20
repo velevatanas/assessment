@@ -46,6 +46,9 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt-get install
 
 RUN pip install supervisor
 
+# Create the logs directory before copying files
+RUN mkdir -p /app/logs
+
 COPY --from=backend /app/backend /app/backend
 COPY --from=frontend /app/frontend /app/frontend
 
