@@ -4,7 +4,7 @@ import { logout, refreshTokenAction } from "./store/authSlice"; // Import action
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-console.log('This is the picked up base url from local file or from env in Divio -' + BASE_URL)
+console.log('BASE_URL is set to -' + BASE_URL)
 
 const API = axios.create({
   baseURL: BASE_URL,

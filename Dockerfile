@@ -27,13 +27,15 @@ FROM node:20-slim AS frontend
 
 WORKDIR /app/frontend
 
-COPY frontend /app/frontend
+COPY frontend/package.json frontend/package-lock.json ./
 
-RUN rm -rf node_modules package-lock.json && npm cache clean --force
-
-RUN npm install --no-optional --legacy-peer-deps
+# Install dependencies
+RUN npm install
 
 RUN npm install rollup --save-dev --legacy-peer-deps
+
+# Copy the rest of the frontend files
+COPY frontend /app/frontend
 
 RUN npm run build
 
