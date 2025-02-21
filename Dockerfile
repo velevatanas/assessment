@@ -51,7 +51,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt-get install
 RUN apt-get update && apt-get install -y nginx
 
 # Create logs directory (if needed)
-RUN mkdir -p /app/logs
+RUN mkdir -p /app/logs /app/backend/static
 
 # Install Supervisor in final stage (if still using it for process management)
 RUN pip install supervisor
@@ -64,12 +64,17 @@ COPY --from=frontend /app/frontend/dist /app/frontend/dist
 # Reinstall Python dependencies in final stage
 RUN pip install --no-cache-dir -r /app/backend/products/requirements.txt
 
+RUN mkdir -p /app/backend/staticfiles
+
+RUN python /app/backend/products/manage.py collectstatic --noinput
+
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # Expose Nginx port (80) and (if needed) backend port (8000)
 EXPOSE 80 8000
 
-# If you're using Supervisor to start both Nginx and Django:
 COPY supervisor.conf /app/supervisor.conf
+
 WORKDIR /app/backend
+
 CMD service nginx start && supervisord -c /app/supervisor.conf
