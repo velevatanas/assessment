@@ -22,6 +22,10 @@ COPY backend/products/db.sqlite3 /app/backend/products/db.sqlite3
 
 RUN pip install supervisor
 
+RUN mkdir -p /app/backend/staticfiles
+
+RUN python products/manage.py collectstatic --noinput --verbosity 3
+
 # ---- Frontend Stage (React) ----
 FROM node:20-slim AS frontend
 
@@ -64,13 +68,12 @@ COPY --from=frontend /app/frontend/dist /app/frontend/dist
 # Reinstall Python dependencies in final stage
 RUN pip install --no-cache-dir -r /app/backend/products/requirements.txt
 
-RUN mkdir -p /app/backend/staticfiles
+COPY --from=backend /app/backend/staticfiles /app/backend/staticfiles
 
-RUN python /app/backend/products/manage.py collectstatic --noinput
+WORKDIR /app
 
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# Expose Nginx port (80) and (if needed) backend port (8000)
 EXPOSE 80 8000
 
 COPY supervisor.conf /app/supervisor.conf
