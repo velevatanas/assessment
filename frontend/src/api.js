@@ -4,7 +4,7 @@ import { logout, refreshTokenAction } from "./store/authSlice"; // Import action
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-console.log('BASE_URL is now set to -' + BASE_URL)
+console.log("BASE_URL is now set to this -" + BASE_URL);
 
 const API = axios.create({
   baseURL: BASE_URL,
@@ -17,8 +17,8 @@ API.interceptors.request.use(
 
     // If no token in Redux, try to get it from localStorage
     if (!token) {
-        const storedTokens = JSON.parse(localStorage.getItem("tokens"));
-        token = storedTokens?.access;
+      const storedTokens = JSON.parse(localStorage.getItem("tokens"));
+      token = storedTokens?.access;
     }
 
     if (token) {
@@ -54,10 +54,10 @@ API.interceptors.response.use(
 
         // Update localStorage
         localStorage.setItem(
-            "tokens",
-            JSON.stringify({ ...storedTokens, access: data.access })
-            );
-    
+          "tokens",
+          JSON.stringify({ ...storedTokens, access: data.access })
+        );
+
         // Retry request with new token
         originalRequest.headers.Authorization = `Bearer ${data.access}`;
         return axios(originalRequest);
