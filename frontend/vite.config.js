@@ -20,7 +20,8 @@ export default defineConfig(({ mode }) => {
     },
     define: {
       "import.meta.env.VITE_API_BASE_URL": JSON.stringify(
-        process.env.VITE_API_BASE_URL || env.VITE_API_BASE_URL
+        env.VITE_API_BASE_URL ||
+          "https://trial-project-atanas-stage.eu.aldryn.io/api"
       ),
     },
   };
