@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import API from "../api";
 import { logout } from "../store/authSlice";
 import { useNavigate } from "react-router-dom";
+import { useDebounce } from "use-debounce";
 import "./Products.css";
 
 const fetchProducts = async (search) => {
@@ -32,6 +33,7 @@ const Products = () => {
   const queryClient = useQueryClient();
 
   const [search, setSearch] = useState(localStorage.getItem("search") || "");
+  const [debouncedSearch] = useDebounce(search, 1000);
   const [selectedProducts, setSelectedProducts] = useState(
     JSON.parse(localStorage.getItem("selectedProducts")) || []
   );
@@ -49,16 +51,18 @@ const Products = () => {
     localStorage.setItem("sortOrder", sortOrder);
   }, [sortColumn, sortOrder]);
 
-  const { data: products, isLoading } = useQuery(["products", search], () =>
-    fetchProducts(search)
+  const { data: products, isLoading } = useQuery(
+    ["products", debouncedSearch],
+    () => fetchProducts(debouncedSearch),
+    { keepPreviousData: true }
   );
 
-const sortedProducts = () => {
+  const sortedProducts = () => {
     if (!products) return [];
     return [...products].sort((a, b) => {
       let valA = a[sortColumn];
       let valB = b[sortColumn];
-  
+
       if (sortColumn === "price") {
         valA = parseFloat(valA.replace(/[^0-9.-]+/g, "")); // Remove $ and parse as float
         valB = parseFloat(valB.replace(/[^0-9.-]+/g, "")); // Remove $ and parse as float
@@ -66,13 +70,13 @@ const sortedProducts = () => {
         if (typeof valA === "string") valA = valA.toLowerCase();
         if (typeof valB === "string") valB = valB.toLowerCase();
       }
-  
+
       if (valA < valB) return sortOrder === "asc" ? -1 : 1;
       if (valA > valB) return sortOrder === "asc" ? 1 : -1;
       return 0;
     });
   };
-  
+
   const handleSort = (column) => {
     if (sortColumn === column) {
       setSortOrder(sortOrder === "asc" ? "desc" : "asc");
@@ -143,52 +147,60 @@ const sortedProducts = () => {
               ID {sortColumn === "id" ? (sortOrder === "asc" ? "↑" : "↓") : ""}
             </th>
             <th onClick={() => handleSort("name")}>
-              Name {sortColumn === "name" ? (sortOrder === "asc" ? "↑" : "↓") : ""}
+              Name{" "}
+              {sortColumn === "name" ? (sortOrder === "asc" ? "↑" : "↓") : ""}
             </th>
             <th onClick={() => handleSort("description")}>
-              Description {sortColumn === "description" ? (sortOrder === "asc" ? "↑" : "↓") : ""}
+              Description{" "}
+              {sortColumn === "description"
+                ? sortOrder === "asc"
+                  ? "↑"
+                  : "↓"
+                : ""}
             </th>
             <th onClick={() => handleSort("price")}>
-              Price {sortColumn === "price" ? (sortOrder === "asc" ? "↑" : "↓") : ""}
+              Price{" "}
+              {sortColumn === "price" ? (sortOrder === "asc" ? "↑" : "↓") : ""}
             </th>
             <th onClick={() => handleSort("stock")}>
-              Stock {sortColumn === "stock" ? (sortOrder === "asc" ? "↑" : "↓") : ""}
+              Stock{" "}
+              {sortColumn === "stock" ? (sortOrder === "asc" ? "↑" : "↓") : ""}
             </th>
           </tr>
         </thead>
         <tbody>
-          {sortedProducts().length > 0 ? (
-            sortedProducts().map((product) => (
-              <tr
-                key={product.id}
-                className={selectedProducts.includes(product.id) ? "selected" : ""}
-                onClick={() => {
-                  if (!selectedProducts.includes(product.id)) {
-                    handleSelect(product.id);
-                  } else {
-                    handleDeselect(product.id);
+          {sortedProducts().length > 0
+            ? sortedProducts().map((product) => (
+                <tr
+                  key={product.id}
+                  className={
+                    selectedProducts.includes(product.id) ? "selected" : ""
                   }
-                }}
-                style={{ cursor: "pointer" }}
-              >
-                <td>{product.id}</td>
-                <td>{product.name}</td>
-                <td>{product.description}</td>
-                <td>${product.price}</td>
-                <td>{product.stock}</td>
-              </tr>
-            ))
-          ) : (
-            [...Array(10)].map((_, index) => (
-              <tr key={index}>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
-            ))
-          )}
+                  onClick={() => {
+                    if (!selectedProducts.includes(product.id)) {
+                      handleSelect(product.id);
+                    } else {
+                      handleDeselect(product.id);
+                    }
+                  }}
+                  style={{ cursor: "pointer" }}
+                >
+                  <td>{product.id}</td>
+                  <td>{product.name}</td>
+                  <td>{product.description}</td>
+                  <td>${product.price}</td>
+                  <td>{product.stock}</td>
+                </tr>
+              ))
+            : [...Array(10)].map((_, index) => (
+                <tr key={index}>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              ))}
         </tbody>
       </table>
     </div>
@@ -196,5 +208,3 @@ const sortedProducts = () => {
 };
 
 export default Products;
-
-
